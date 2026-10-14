@@ -1,8 +1,8 @@
-# Classroom Hub
+# Google Classroom
 
-This is a responsive frontend web application built as a custom classroom clone for participating in the **Code2Canvas** frontend development competition. 
+This is a responsive frontend web application built as a custom Google Classroom clone for participating in the **Code2Canvas** frontend development competition. 
 
-🔗 **Live Website:** [https://classroom-c2c.netlify.app](https://classroom-c2c.netlify.app)
+🔗 **Live Website:** [https://googleclassrom-c2c.netlify.app](https://googleclassrom-c2c.netlify.app)
 
 ---
 

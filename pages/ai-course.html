@@ -251,7 +251,7 @@
                 <line x1="3" y1="18" x2="21" y2="18"/>
               </svg>
             </button>
-            <img class="brand-logo" src="assets/logo.jpg" alt="College logo">Google Classroom
+            <img class="brand-logo" src="assets/logo.jpg" alt="College logo">Classroom
           </div>
           <a href="index.html" class="back-link">‹ Back to My Courses</a>
           <h1 id="coursePageHeading">Artificial Intelligence</h1>
@@ -410,7 +410,7 @@
 
     <div class="setting-group account-group">
       <h3>Account</h3>
-      <p>You are signed in to Google Classroom.</p>
+      <p>You are signed in to Classroom.</p>
       <div class="account-card">
         <img class="account-avatar" src="https://i.pravatar.cc/80?img=47" alt="Lena Williams">
         <div class="account-info">
@@ -443,7 +443,7 @@
   const key = params.get('course') || 'ai';
   const course = coursesData[key] || coursesData.ai;
 
-  document.title = `${course.title} — Google Classroom`;
+  document.title = `${course.title} — Classroom`;
   document.getElementById('coursePageHeading').textContent = course.title;
   document.getElementById('courseBannerTitle').textContent = `${course.code}: ${course.title}`;
   document.getElementById('courseInstructor').textContent = course.teacher;
