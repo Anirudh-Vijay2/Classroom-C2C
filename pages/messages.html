@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messages — Google Classroom</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Messages Page Specific Styles */
+    .main-messages {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding-bottom: 18px;
+    }
+
+    .chat-layout {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    /* Contacts List */
+    .chat-list {
+      border-right: 1px solid var(--line);
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .chat-search {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .chat-search input {
+      width: 100%;
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 11px;
+      outline-color: var(--green);
+    }
+
+    .contact {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      width: 100%;
+      transition: background 0.18s;
+    }
+
+    .contact:hover,
+    .contact.active {
+      background: var(--paper);
+    }
+
+    .contact.active {
+      border-left: 3px solid var(--green);
+    }
+
+    .contact img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 auto;
+    }
+
+    .contact-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .contact-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 3px;
+    }
+
+    .contact-top strong {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .contact-top time {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .contact-preview {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .unread-badge {
+      background: var(--green);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 99px;
+    }
+
+    /* Active Conversation Window */
+    .chat-window {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      background: var(--paper);
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .chat-header-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-header-user img {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .chat-header-user strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .chat-header-user small {
+      font-size: 10px;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .msg {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 13px;
+      font-size: 12px;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    .msg.received {
+      align-self: flex-start;
+      background: var(--bg);
+      color: var(--ink);
+      border-bottom-left-radius: 3px;
+    }
+
+    .msg.sent {
+      align-self: flex-end;
+      background: var(--green);
+      color: #fff;
+      border-bottom-right-radius: 3px;
+    }
+
+    .msg time {
+      display: block;
+      font-size: 9px;
+      opacity: 0.72;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .chat-input-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--line);
+      background: var(--paper);
+    }
+
+    .chat-input-bar input {
+      flex: 1;
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 12px;
+      outline-color: var(--green);
+    }
+
+    .chat-input-bar button {
+      background: var(--green);
+      color: #fff;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: filter 0.18s;
+    }
+
+    .chat-input-bar button:hover {
+      filter: brightness(0.95);
+    }
+
+    @media (max-width: 760px) {
+      .chat-layout {
+        grid-template-columns: 1fr;
+        min-height: 520px;
+      }
+      .chat-list {
+        max-height: 175px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="frame">
+  <div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="../assets/logo.png" alt="College logo">
+        <div>Google<small>Classroom</small></div>
+        <button class="sidebar-close" id="closeSidebar" aria-label="Close navigation menu">×</button>
+      </div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="../index.html" data-nav="Dashboard">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span>Dashboard
+        </a>
+        <a href="all-courses.html" data-nav="All Courses">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg></span>All Courses
+        </a>
+        <a href="messages.html" class="active" data-nav="Messages">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Messages
+        </a>
+        <a href="friends.html" data-nav="Friends">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Friends
+        </a>
+        <a href="schedule.html" data-nav="Schedule">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Schedule
+        </a>
+        <a href="todo.html" data-nav="To-do">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>To-do
+        </a>
+      </nav>
+
+      <nav class="nav settings">
+        <button type="button" data-nav="Settings">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>Settings
+        </button>
+      </nav>
+    </aside>
+
+    <main class="main main-messages">
+      <header class="topbar">
+        <div>
+          <div class="mobile-brand">
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+            <img class="brand-logo" src="assets/logo.jpg" alt="College logo">Google Classroom
+          </div>
+          <h1>Messages</h1>
+        </div>
+        <div class="tools">
+          <button class="iconbtn" id="notify" aria-label="Notifications">♧<span class="dot"></span></button>
+        </div>
+      </header>
+
+      <section class="chat-layout" aria-label="Direct messages">
+        <!-- Left Column: Conversation List -->
+        <div class="chat-list">
+          <div class="chat-search">
+            <input type="text" id="contactSearch" placeholder="Search people or groups..." aria-label="Search contacts">
+          </div>
+
+          <div id="contactContainer">
+            <button class="contact active" data-contact="felix">
+              <img src="https://i.pravatar.cc/80?img=68" alt="Mr. Felix">
+              <div class="contact-info">
+                <div class="contact-top">
+                  <strong>Mr. Felix</strong>
+                  <time>10:42 AM</time>
+                </div>
+                <div class="contact-preview">Make sure your A* heuristic is admissible.</div>
+              </div>
+              <span class="unread-badge" id="badge-felix">1</span>
+            </button>
+
+            <button class="contact" data-contact="sophia">
+              <img src="https://i.pravatar.cc/80?img=44" alt="Sophia Chen">
+              <div class="contact-info">
+                <div class="contact-top">
+                  <strong>Sophia Chen</strong>
+                  <time>Yesterday</time>
+                </div>
+                <div class="contact-preview">Did you finish the OS process scheduling lab?</div>
+              </div>
+            </button>
+
+            <button class="contact" data-contact="nancy">
+              <img src="https://i.pravatar.cc/80?img=32" alt="Ms. Nancy">
+              <div class="contact-info">
+                <div class="contact-top">
+                  <strong>Ms. Nancy</strong>
+                  <time>Dec 12</time>
+                </div>
+                <div class="contact-preview">Your Operating Systems lab report has been graded.</div>
+              </div>
+            </button>
+
+            <button class="contact" data-contact="james">
+              <img src="https://i.pravatar.cc/80?img=12" alt="James Miller">
+              <div class="contact-info">
+                <div class="contact-top">
+                  <strong>James Miller</strong>
+                  <time>Dec 10</time>
+                </div>
+                <div class="contact-preview">Shared the Cloud Computing study notes!</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Active Chat Thread -->
+        <div class="chat-window">
+          <header class="chat-header">
+            <div class="chat-header-user">
+              <img id="activeAvatar" src="https://i.pravatar.cc/80?img=68" alt="Mr. Felix">
+              <div>
+                <strong id="activeName">Mr. Felix</strong>
+                <small id="activeRole">Instructor · Artificial Intelligence</small>
+              </div>
+            </div>
+          </header>
+
+          <div class="chat-messages" id="chatMessages"></div>
+
+          <form class="chat-input-bar" id="chatForm">
+            <input type="text" id="chatInput" placeholder="Write a message..." autocomplete="off" aria-label="Write a message">
+            <button type="submit">Send</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <aside class="right">
+      <div class="profile"><div class="name">Lena Williams<span class="id">ID: 1094881999</span></div><img class="avatar" src="https://i.pravatar.cc/80?img=47" alt="Lena Williams"></div>
+      <section class="calendar">
+        <div class="calendar-head"><h3 id="monthLabel">Dec 2025</h3><div class="cal-arrows"><button id="prevMonth" aria-label="Previous month">‹</button><button id="nextMonth" aria-label="Next month">›</button></div></div>
+        <div class="weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+        <div class="days" id="days"></div>
+      </section>
+      <section class="online"><div class="online-head"><h3>Online Users</h3><button id="seeAll">See all</button></div>
+        <div id="users">
+          <div class="user"><img src="https://i.pravatar.cc/80?img=44" alt=""><div><div class="user-name">Sophia Chen</div><div class="user-id">1094882001</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=12" alt=""><div><div class="user-name">James Miller</div><div class="user-id">1094672000</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=47" alt=""><div><div class="user-name">Isabella Garcia</div><div class="user-id">1094342003</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=13" alt=""><div><div class="user-name">William Brown</div><div class="user-id">1094662002</div></div><span class="status"></span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<!-- Shared Settings Modal -->
+<div class="settings-overlay" id="settingsOverlay" aria-hidden="true">
+  <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-heading">
+      <div>
+        <p class="settings-eyebrow">PREFERENCES</p>
+        <h2 id="settingsTitle">Settings</h2>
+        <p class="settings-description">Personalise your classroom experience.</p>
+      </div>
+      <button class="settings-close" id="closeSettings" aria-label="Close settings">×</button>
+    </div>
+
+    <div class="setting-group">
+      <h3>Appearance</h3>
+      <p>Choose the look that feels right for you.</p>
+      <div class="theme-options" role="group" aria-label="Website theme">
+        <button class="theme-option" data-theme-choice="default" aria-pressed="true">
+          <span class="theme-preview preview-default"><i></i><i></i><i></i></span>
+          <span><strong>Default</strong><small>Original green theme</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+        <button class="theme-option" data-theme-choice="dark" aria-pressed="false">
+          <span class="theme-preview preview-dark"><i></i><i></i><i></i></span>
+          <span><strong>Dark</strong><small>Easy on the eyes</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+        <button class="theme-option" data-theme-choice="day" aria-pressed="false">
+          <span class="theme-preview preview-day"><i></i><i></i><i></i></span>
+          <span><strong>Day</strong><small>Warm, bright colours</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="setting-group account-group">
+      <h3>Account</h3>
+      <p>You are signed in to Google Classroom.</p>
+      <div class="account-card">
+        <img class="account-avatar" src="https://i.pravatar.cc/80?img=47" alt="Lena Williams">
+        <div class="account-info">
+          <strong>Lena Williams</strong>
+          <small>ID: 1094881999</small>
+          <small>CSE B · 2022 Batch</small>
+        </div>
+        <span class="account-status"><i></i>Signed in</span>
+      </div>
+      <button class="logout-btn" id="logoutBtn" type="button">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+        Log out
+      </button>
+    </div>
+    <p class="settings-note">Your theme preference is saved on this device.</p>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="../js/script.js"></script>
+<script>
+  const threads = {
+    felix: {
+      name: 'Mr. Felix',
+      role: 'Instructor · Artificial Intelligence',
+      avatar: 'https://i.pravatar.cc/80?img=68',
+      messages: [
+        { type: 'received', text: 'Hi Lena, great job on your Minimax lab submission.', time: '10:30 AM' },
+        { type: 'sent', text: 'Thank you sir! Quick question about Lab 3 — can we use Manhattan distance for the 8-puzzle?', time: '10:38 AM' },
+        { type: 'received', text: 'Yes! Just make sure your A* heuristic is admissible so it guarantees the shortest path.', time: '10:42 AM' }
+      ]
+    },
+    sophia: {
+      name: 'Sophia Chen',
+      role: 'Classmate · CSE B 2022 Batch · Online',
+      avatar: 'https://i.pravatar.cc/80?img=44',
+      messages: [
+        { type: 'received', text: 'Hey! Did you finish the OS process scheduling lab?', time: 'Yesterday' },
+        { type: 'sent', text: 'Almost done with Round Robin, testing the turnaround time calculation now.', time: 'Yesterday' }
+      ]
+    },
+    nancy: {
+      name: 'Ms. Nancy',
+      role: 'Instructor · Operating Systems',
+      avatar: 'https://i.pravatar.cc/80?img=32',
+      messages: [
+        { type: 'received', text: 'Your Operating Systems lab report has been graded. You scored 98/100.', time: 'Dec 12' }
+      ]
+    },
+    james: {
+      name: 'James Miller',
+      role: 'Classmate · CSE B 2022 Batch · Online',
+      avatar: 'https://i.pravatar.cc/80?img=12',
+      messages: [
+        { type: 'received', text: 'Shared the Cloud Computing study notes in the drive folder!', time: 'Dec 10' },
+        { type: 'sent', text: 'Awesome, thanks James!', time: 'Dec 10' }
+      ]
+    }
+  };
+
+  let activeId = 'felix';
+  const chatMessages = document.getElementById('chatMessages');
+  const activeName = document.getElementById('activeName');
+  const activeRole = document.getElementById('activeRole');
+  const activeAvatar = document.getElementById('activeAvatar');
+
+  function renderThread(id) {
+    activeId = id;
+    const thread = threads[id];
+    activeName.textContent = thread.name;
+    activeRole.textContent = thread.role;
+    activeAvatar.src = thread.avatar;
+
+    const badge = document.getElementById(`badge-${id}`);
+    if (badge) badge.remove();
+
+    chatMessages.innerHTML = '';
+    thread.messages.forEach(m => {
+      const bubble = document.createElement('div');
+      bubble.className = `msg ${m.type}`;
+      bubble.innerHTML = `<div></div><time>${m.time}</time>`;
+      bubble.querySelector('div').textContent = m.text;
+      chatMessages.append(bubble);
+    });
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  document.querySelectorAll('.contact').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.contact').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderThread(btn.dataset.contact);
+    });
+  });
+
+  document.getElementById('chatForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    threads[activeId].messages.push({ type: 'sent', text, time: 'Just now' });
+    const activeContactBtn = document.querySelector(`.contact[data-contact="${activeId}"] .contact-preview`);
+    if (activeContactBtn) activeContactBtn.textContent = `You: ${text}`;
+
+    input.value = '';
+    renderThread(activeId);
+  });
+
+  document.getElementById('contactSearch').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    document.querySelectorAll('.contact').forEach(btn => {
+      const match = btn.textContent.toLowerCase().includes(q);
+      btn.style.display = match ? '' : 'none';
+    });
+  });
+
+  renderThread('felix');
+</script>
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Friends — Google Classroom</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Friends Page Specific Styles */
+    .friends-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+    }
+
+    .friends-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .friend-tab {
+      border: 0;
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 99px;
+      transition: 0.18s;
+    }
+
+    .friend-tab.active,
+    .friend-tab:hover {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .friend-tab .count {
+      display: inline-block;
+      margin-left: 5px;
+      padding: 1px 6px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.22);
+      font-size: 10px;
+    }
+
+    .friend-search {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 12px;
+      min-width: 210px;
+      outline-color: var(--green);
+    }
+
+    .friends-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .friend-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+
+    .friend-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .friend-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .avatar-wrap img {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      background: #e8e8ed;
+    }
+
+    .presence {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      border: 2px solid var(--paper);
+      background: #b8bac2;
+    }
+
+    .presence.online {
+      background: #459963;
+    }
+
+    .friend-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .friend-info h3 {
+      font: 700 14px 'Manrope', sans-serif;
+      margin: 0 0 3px;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .friend-info .meta {
+      font-size: 10px;
+      color: var(--muted);
+      display: block;
+    }
+
+    .shared-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 7px;
+      background: var(--bg);
+      color: var(--muted);
+    }
+
+    .friend-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .btn-msg,
+    .btn-secondary {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 9px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: 0.18s;
+    }
+
+    .btn-msg {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-msg:hover {
+      filter: brightness(0.95);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    @media (max-width: 800px) {
+      .friends-grid {
+        grid-template-columns: 1fr;
+      }
+      .friend-search {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="frame">
+  <div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="../assets/logo.png" alt="College logo">
+        <div>Google<small>Classroom</small></div>
+        <button class="sidebar-close" id="closeSidebar" aria-label="Close navigation menu">×</button>
+      </div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="../index.html" data-nav="Dashboard">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span>Dashboard
+        </a>
+        <a href="all-courses.html" data-nav="All Courses">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg></span>All Courses
+        </a>
+        <a href="messages.html" data-nav="Messages">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Messages
+        </a>
+        <a href="friends.html" class="active" data-nav="Friends">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Friends
+        </a>
+        <a href="schedule.html" data-nav="Schedule">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Schedule
+        </a>
+        <a href="todo.html" data-nav="To-do">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>To-do
+        </a>
+      </nav>
+
+      <nav class="nav settings">
+        <button type="button" data-nav="Settings">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>Settings
+        </button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="mobile-brand">
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+            <img class="brand-logo" src="assets/logo.jpg" alt="College logo">Google Classroom
+          </div>
+          <h1>Classmates & Friends</h1>
+        </div>
+        <div class="tools">
+          <button class="iconbtn" id="notify" aria-label="Notifications">♧<span class="dot"></span></button>
+        </div>
+      </header>
+
+      <div class="friends-controls">
+        <div class="friends-tabs" role="tablist">
+          <button class="friend-tab active" data-filter="all">All Classmates <span class="count">6</span></button>
+          <button class="friend-tab" data-filter="online">Online <span class="count">4</span></button>
+          <button class="friend-tab" data-filter="requests">Requests <span class="count" id="reqCount">2</span></button>
+        </div>
+        <input type="text" class="friend-search" id="friendSearch" placeholder="Search by name or ID..." aria-label="Search friends">
+      </div>
+
+      <section class="friends-grid" id="friendsGrid">
+        <!-- Friend 1 -->
+        <article class="friend-card" data-status="online" data-name="Sophia Chen 1094882001">
+          <div class="friend-head">
+            <div class="avatar-wrap">
+              <img src="https://i.pravatar.cc/80?img=44" alt="Sophia Chen">
+              <span class="presence online" title="Online"></span>
+            </div>
+            <div class="friend-info">
+              <h3>Sophia Chen</h3>
+              <span class="meta">ID: 1094882001 · CSE B 2022 Batch</span>
+            </div>
+          </div>
+          <div class="shared-tags">
+            <span class="tag">Artificial Intelligence</span>
+            <span class="tag">Operating Systems</span>
+          </div>
+          <div class="friend-actions">
+            <a href="messages.html" class="btn-msg">Message</a>
+            <button class="btn-secondary" onclick="toast('Viewing Sophia Chen’s profile…')">Profile</button>
+          </div>
+        </article>
+
+        <!-- Friend 2 -->
+        <article class="friend-card" data-status="online" data-name="James Miller 1094672000">
+          <div class="friend-head">
+            <div class="avatar-wrap">
+              <img src="https://i.pravatar.cc/80?img=12" alt="James Miller">
+              <span class="presence online" title="Online"></span>
+            </div>
+            <div class="friend-info">
+              <h3>James Miller</h3>
+              <span class="meta">ID: 1094672000 · CSE B 2022 Batch</span>
+            </div>
+          </div>
+          <div class="shared-tags">
+            <span class="tag">Cloud Computing</span>
+            <span class="tag">Web Programming</span>
+          </div>
+          <div class="friend-actions">
+            <a href="messages.html" class="btn-msg">Message</a>
+            <button class="btn-secondary" onclick="toast('Viewing James Miller’s profile…')">Profile</button>
+          </div>
+        </article>
+
+        <!-- Friend 3 -->
+        <article class="friend-card" data-status="online" data-name="Isabella Garcia 1094342003">
+          <div class="friend-head">
+            <div class="avatar-wrap">
+              <img src="https://i.pravatar.cc/80?img=47" alt="Isabella Garcia">
+              <span class="presence online" title="Online"></span>
+            </div>
+            <div class="friend-info">
+              <h3>Isabella Garcia</h3>
+              <span class="meta">ID: 1094342003 · CSE B 2022 Batch</span>
+            </div>
+          </div>
+          <div class="shared-tags">
+            <span class="tag">Graphic Designing</span>
+            <span class="tag">Software Engineering</span>
+          </div>
+          <div class="friend-actions">
+            <a href="messages.html" class="btn-msg">Message</a>
+            <button class="btn-secondary" onclick="toast('Viewing Isabella Garcia’s profile…')">Profile</button>
+          </div>
+        </article>
+
+        <!-- Friend 4 -->
+        <article class="friend-card" data-status="online" data-name="William Brown 1094662002">
+          <div class="friend-head">
+            <div class="avatar-wrap">
+              <img src="https://i.pravatar.cc/80?img=13" alt="William Brown">
+              <span class="presence online" title="Online"></span>
+            </div>
+            <div class="friend-info">
+              <h3>William Brown</h3>
+              <span class="meta">ID: 1094662002 · CSE B 2022 Batch</span>
+            </div>
+          </div>
+          <div class="shared-tags">
+            <span class="tag">Artificial Intelligence</span>
+            <span class="tag">Cloud Computing</span>
+          </div>
+          <div class="friend-actions">
+            <a href="messages.html" class="btn-msg">Message</a>
+            <button class="btn-secondary" onclick="toast('Viewing William Brown’s profile…')">Profile</button>
+          </div>
+        </article>
+
+        <!-- Friend 5 (Offline) -->
+        <article class="friend-card" data-status="offline" data-name="Noah Wilson 1094882015">
+          <div class="friend-head">
+            <div class="avatar-wrap">
+              <img src="https://i.pravatar.cc/80?img=53" alt="Noah Wilson">
+              <span class="presence" title="Offline"></span>
+            </div>
+            <div class="friend-info">
+              <h3>Noah Wilson</h3>
+              <span class="meta">ID: 1094882015 · CSE B 2022 Batch</span>
+            </div>
+          </div>
+          <div class="shared-tags">
+            <span class="tag">Web Programming</span>
+            <span class="tag">Operating Systems</span>
+          </div>
+          <div class="friend-actions">
+            <a href="messages.html" class="btn-msg">Message</a>
+            <button class="btn-secondary" onclick="toast('Viewing Noah Wilson’s profile…')">Profile</button>
+          </div>
+        </article>
+
+        <!-- Friend 6 (Offline) -->
+        <article class="friend-card" data-status="offline" data-name="Maya Nair 1094882019">
+          <div class="friend-head">
+            <div class="avatar-wrap">
+              <img src="https://i.pravatar.cc/80?img=41" alt="Maya Nair">
+              <span class="presence" title="Offline"></span>
+            </div>
+            <div class="friend-info">
+              <h3>Maya Nair</h3>
+              <span class="meta">ID: 1094882019 · CSE B 2022 Batch</span>
+            </div>
+          </div>
+          <div class="shared-tags">
+            <span class="tag">Software Engineering</span>
+            <span class="tag">Artificial Intelligence</span>
+          </div>
+          <div class="friend-actions">
+            <a href="messages.html" class="btn-msg">Message</a>
+            <button class="btn-secondary" onclick="toast('Viewing Maya Nair’s profile…')">Profile</button>
+          </div>
+        </article>
+
+        <!-- Friend Request 1 -->
+        <article class="friend-card" data-status="requests" data-name="Ethan Davis 1094882034">
+          <div class="friend-head">
+            <div class="avatar-wrap">
+              <img src="https://i.pravatar.cc/80?img=60" alt="Ethan Davis">
+              <span class="presence online" title="Online"></span>
+            </div>
+            <div class="friend-info">
+              <h3>Ethan Davis</h3>
+              <span class="meta">ID: 1094882034 · CSE A 2022 Batch</span>
+            </div>
+          </div>
+          <div class="shared-tags">
+            <span class="tag">2 Mutual Courses</span>
+          </div>
+          <div class="friend-actions">
+            <button class="btn-msg accept-btn" type="button">Accept</button>
+            <button class="btn-secondary decline-btn" type="button">Ignore</button>
+          </div>
+        </article>
+
+        <!-- Friend Request 2 -->
+        <article class="friend-card" data-status="requests" data-name="Olivia Martinez 1094882041">
+          <div class="friend-head">
+            <div class="avatar-wrap">
+              <img src="https://i.pravatar.cc/80?img=25" alt="Olivia Martinez">
+              <span class="presence" title="Offline"></span>
+            </div>
+            <div class="friend-info">
+              <h3>Olivia Martinez</h3>
+              <span class="meta">ID: 1094882041 · CSE A 2022 Batch</span>
+            </div>
+          </div>
+          <div class="shared-tags">
+            <span class="tag">Graphic Designing Study Group</span>
+          </div>
+          <div class="friend-actions">
+            <button class="btn-msg accept-btn" type="button">Accept</button>
+            <button class="btn-secondary decline-btn" type="button">Ignore</button>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <aside class="right">
+      <div class="profile"><div class="name">Lena Williams<span class="id">ID: 1094881999</span></div><img class="avatar" src="https://i.pravatar.cc/80?img=47" alt="Lena Williams"></div>
+      <section class="calendar">
+        <div class="calendar-head"><h3 id="monthLabel">Dec 2025</h3><div class="cal-arrows"><button id="prevMonth" aria-label="Previous month">‹</button><button id="nextMonth" aria-label="Next month">›</button></div></div>
+        <div class="weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+        <div class="days" id="days"></div>
+      </section>
+      <section class="online"><div class="online-head"><h3>Online Users</h3><button id="seeAll">See all</button></div>
+        <div id="users">
+          <div class="user"><img src="https://i.pravatar.cc/80?img=44" alt=""><div><div class="user-name">Sophia Chen</div><div class="user-id">1094882001</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=12" alt=""><div><div class="user-name">James Miller</div><div class="user-id">1094672000</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=47" alt=""><div><div class="user-name">Isabella Garcia</div><div class="user-id">1094342003</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=13" alt=""><div><div class="user-name">William Brown</div><div class="user-id">1094662002</div></div><span class="status"></span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<!-- Shared Settings Modal -->
+<div class="settings-overlay" id="settingsOverlay" aria-hidden="true">
+  <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-heading">
+      <div>
+        <p class="settings-eyebrow">PREFERENCES</p>
+        <h2 id="settingsTitle">Settings</h2>
+        <p class="settings-description">Personalise your classroom experience.</p>
+      </div>
+      <button class="settings-close" id="closeSettings" aria-label="Close settings">×</button>
+    </div>
+
+    <div class="setting-group">
+      <h3>Appearance</h3>
+      <p>Choose the look that feels right for you.</p>
+      <div class="theme-options" role="group" aria-label="Website theme">
+        <button class="theme-option" data-theme-choice="default" aria-pressed="true">
+          <span class="theme-preview preview-default"><i></i><i></i><i></i></span>
+          <span><strong>Default</strong><small>Original green theme</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+        <button class="theme-option" data-theme-choice="dark" aria-pressed="false">
+          <span class="theme-preview preview-dark"><i></i><i></i><i></i></span>
+          <span><strong>Dark</strong><small>Easy on the eyes</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+        <button class="theme-option" data-theme-choice="day" aria-pressed="false">
+          <span class="theme-preview preview-day"><i></i><i></i><i></i></span>
+          <span><strong>Day</strong><small>Warm, bright colours</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="setting-group account-group">
+      <h3>Account</h3>
+      <p>You are signed in to Google Classroom.</p>
+      <div class="account-card">
+        <img class="account-avatar" src="https://i.pravatar.cc/80?img=47" alt="Lena Williams">
+        <div class="account-info">
+          <strong>Lena Williams</strong>
+          <small>ID: 1094881999</small>
+          <small>CSE B · 2022 Batch</small>
+        </div>
+        <span class="account-status"><i></i>Signed in</span>
+      </div>
+      <button class="logout-btn" id="logoutBtn" type="button">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+        Log out
+      </button>
+    </div>
+    <p class="settings-note">Your theme preference is saved on this device.</p>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="../js/script.js"></script>
+<script>
+  let currentTab = 'all';
+  const friendSearch = document.getElementById('friendSearch');
+  const cards = [...document.querySelectorAll('.friend-card')];
+
+  function updateFriendsView() {
+    const q = friendSearch.value.toLowerCase();
+    cards.forEach(card => {
+      const status = card.dataset.status;
+      const matchesSearch = card.dataset.name.toLowerCase().includes(q);
+      const matchesTab =
+        currentTab === 'all'
+          ? status !== 'requests'
+          : currentTab === 'online'
+          ? status === 'online'
+          : status === 'requests';
+
+      card.style.display = matchesSearch && matchesTab ? '' : 'none';
+    });
+  }
+
+  document.querySelectorAll('.friend-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.friend-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentTab = tab.dataset.filter;
+      updateFriendsView();
+    });
+  });
+
+  friendSearch.addEventListener('input', updateFriendsView);
+
+  // Accept / Ignore Friend Requests
+  document.querySelectorAll('.accept-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.friend-card');
+      const name = card.querySelector('h3').textContent;
+      card.dataset.status = 'online';
+      card.querySelector('.friend-actions').innerHTML = `
+        <a href="messages.html" class="btn-msg">Message</a>
+        <button class="btn-secondary" onclick="toast('Viewing ${name}’s profile…')">Profile</button>
+      `;
+      const reqCount = document.getElementById('reqCount');
+      reqCount.textContent = Math.max(0, +reqCount.textContent - 1);
+      toast(`${name} added to your classmates!`);
+      updateFriendsView();
+    });
+  });
+
+  document.querySelectorAll('.decline-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.friend-card');
+      const name = card.querySelector('h3').textContent;
+      card.remove();
+      const reqCount = document.getElementById('reqCount');
+      reqCount.textContent = Math.max(0, +reqCount.textContent - 1);
+      toast(`Request from ${name} ignored`);
+    });
+  });
+
+  updateFriendsView();
+</script>
+</body>
+</html>

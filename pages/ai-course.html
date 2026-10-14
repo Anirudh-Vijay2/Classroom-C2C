@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Artificial Intelligence — Google Classroom</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: none;
+      margin-bottom: 6px;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .course-banner {
+      position: relative;
+      background: var(--tint, #f1e8f6);
+      border-radius: 16px;
+      padding: 26px 24px;
+      overflow: hidden;
+      isolation: isolate;
+      margin-bottom: 20px;
+      color: #252738;
+    }
+    .course-banner .badge {
+      display: inline-block;
+      background: var(--accent, #c36bd7);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 99px;
+      letter-spacing: 0.6px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
+    }
+    .course-banner h2 {
+      font: 800 24px 'Manrope', sans-serif;
+      margin: 0 0 6px;
+      position: relative;
+      z-index: 2;
+      letter-spacing: -0.5px;
+    }
+    .course-banner p {
+      font-size: 12px;
+      color: #525463;
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+    .course-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 20px;
+    }
+    .course-tab {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-bottom: 2px solid transparent;
+      transition: 0.18s;
+    }
+    .course-tab.active,
+    .course-tab:hover {
+      color: var(--green);
+      border-bottom-color: var(--green);
+    }
+    .tab-panel {
+      display: none;
+      gap: 14px;
+    }
+    .tab-panel.active {
+      display: grid;
+    }
+    .announce-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+    .announce-box img {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .announce-box input {
+      flex: 1;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 12px;
+      outline: none;
+    }
+    .announce-box button {
+      background: var(--green);
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .stream-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+    .stream-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .stream-ico {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #f1e8f6;
+      color: #c36bd7;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex: 0 0 auto;
+    }
+    .stream-meta strong {
+      display: block;
+      font-size: 13px;
+    }
+    .stream-meta small {
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .stream-body {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--ink);
+      margin: 0 0 12px;
+    }
+    .attachment {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .upcoming-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 24px;
+    }
+    .upcoming-card h3 {
+      font: 800 15px 'Manrope', sans-serif;
+      color: var(--green);
+      margin: 0 0 12px;
+    }
+    .due-item {
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 11px;
+    }
+    .due-item:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+    .due-item strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .due-item span {
+      color: var(--muted);
+      font-size: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="frame">
+  <div class="app">
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="../assets/logo.png" alt="College logo">
+        <div>Google<small>Classroom</small></div>
+        <button class="sidebar-close" id="closeSidebar" aria-label="Close navigation menu">×</button>
+      </div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="../index.html" data-nav="Dashboard">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span>Dashboard
+        </a>
+        <a href="all-courses.html" class="active" data-nav="All Courses">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg></span>All Courses
+        </a>
+        <a href="messages.html" data-nav="Messages">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Messages
+        </a>
+        <a href="friends.html" data-nav="Friends">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Friends
+        </a>
+        <a href="schedule.html" data-nav="Schedule">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Schedule
+        </a>
+        <a href="todo.html" data-nav="To-do">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>To-do
+        </a>
+      </nav>
+
+      <nav class="nav settings">
+        <button type="button" data-nav="Settings">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>Settings
+        </button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="mobile-brand">
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+            <img class="brand-logo" src="assets/logo.jpg" alt="College logo">Google Classroom
+          </div>
+          <a href="index.html" class="back-link">‹ Back to My Courses</a>
+          <h1 id="coursePageHeading">Artificial Intelligence</h1>
+        </div>
+        <div class="tools">
+          <button class="iconbtn" id="notify" aria-label="Notifications">♧<span class="dot"></span></button>
+        </div>
+      </header>
+
+      <section class="course-banner c1" id="courseBanner" style="--tint:#f1e8f6;--accent:#c36bd7">
+        <div class="art"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+        <span class="badge" id="courseBadge">ADVANCED · TECHNICAL</span>
+        <h2 id="courseBannerTitle">CS401: Artificial Intelligence</h2>
+        <p>CSE B 2022 BATCH · Instructor: <strong id="courseInstructor">Mr. Felix</strong></p>
+      </section>
+
+      <div class="course-tabs" role="tablist">
+        <button class="course-tab active" data-tab="stream">Stream</button>
+        <button class="course-tab" data-tab="classwork">Classwork</button>
+        <button class="course-tab" data-tab="people">People</button>
+      </div>
+
+      <section class="tab-panel active" id="tab-stream">
+        <div class="announce-box">
+          <img src="https://i.pravatar.cc/80?img=47" alt="Lena Williams">
+          <input id="postInput" type="text" placeholder="Announce something to your class...">
+          <button id="postBtn" type="button">Post</button>
+        </div>
+
+        <div id="streamList" style="display: grid; gap: 14px;">
+          <article class="stream-card">
+            <div class="stream-meta">
+              <div class="stream-ico">📋</div>
+              <div>
+                <strong id="announceAuthor1">Mr. Felix posted a new assignment: Lab 3 — A* Pathfinding</strong>
+                <small>Dec 12, 2025 · Due Dec 18, 11:59 PM</small>
+              </div>
+            </div>
+            <p class="stream-body">Complete the implementation and upload your source files along with a brief output report before the deadline.</p>
+            <div class="attachment" onclick="toast('Downloading Starter_Code.zip…')">📎 Starter_Code.zip</div>
+          </article>
+
+          <article class="stream-card">
+            <div class="stream-meta">
+              <div class="stream-ico">📘</div>
+              <div>
+                <strong>New study material uploaded: Module 2 Lecture Slides</strong>
+                <small>Dec 8, 2025</small>
+              </div>
+            </div>
+            <p class="stream-body">Reference slides and practice problem sets from this week's lectures.</p>
+            <div class="attachment" onclick="toast('Opening Module_2_Slides.pdf…')">📄 Module_2_Slides.pdf</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="tab-classwork">
+        <article class="stream-card">
+          <div class="stream-meta">
+            <div class="stream-ico">💻</div>
+            <div>
+              <strong>Lab 3: Practical Implementation</strong>
+              <small>Due Dec 18, 2025 · 100 points</small>
+            </div>
+          </div>
+          <div class="attachment" onclick="toast('Opening assignment submission portal…')">Submit Assignment</div>
+        </article>
+
+        <article class="stream-card">
+          <div class="stream-meta">
+            <div class="stream-ico">📝</div>
+            <div>
+              <strong>Quiz 1: Core Concepts & Fundamentals</strong>
+              <small>Completed · Score: 19 / 20</small>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="tab-panel" id="tab-people">
+        <article class="stream-card">
+          <h3 style="margin: 0 0 12px; font-size: 14px; color: var(--green);">Instructor</h3>
+          <div class="user" style="margin: 0;">
+            <img src="https://i.pravatar.cc/80?img=68" alt="Instructor">
+            <div>
+              <div class="user-name"><strong id="peopleInstructor">Mr. Felix</strong></div>
+              <div class="user-id">faculty@college.edu</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="stream-card">
+          <h3 style="margin: 0 0 12px; font-size: 14px; color: var(--green);">Classmates (CSE B 2022 Batch)</h3>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=44" alt=""><div><div class="user-name">Sophia Chen</div><div class="user-id">1094882001</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=12" alt=""><div><div class="user-name">James Miller</div><div class="user-id">1094672000</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=47" alt=""><div><div class="user-name">Isabella Garcia</div><div class="user-id">1094342003</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=13" alt=""><div><div class="user-name">William Brown</div><div class="user-id">1094662002</div></div><span class="status"></span></div>
+        </article>
+      </section>
+    </main>
+
+    <aside class="right">
+      <div class="profile" style="margin-bottom: 28px;">
+        <div class="name">Lena Williams<span class="id">ID: 1094881999</span></div>
+        <img class="avatar" src="https://i.pravatar.cc/80?img=47" alt="Lena Williams">
+      </div>
+
+      <div class="upcoming-card">
+        <h3>Upcoming Deadlines</h3>
+        <div class="due-item">
+          <strong>Lab 3 Submission</strong>
+          <span>Due Dec 18 · 11:59 PM</span>
+        </div>
+        <div class="due-item">
+          <strong>Mini Project Proposal</strong>
+          <span>Due Dec 22 · 5:00 PM</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Shared Settings Modal -->
+<div class="settings-overlay" id="settingsOverlay" aria-hidden="true">
+  <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-heading">
+      <div>
+        <p class="settings-eyebrow">PREFERENCES</p>
+        <h2 id="settingsTitle">Settings</h2>
+        <p class="settings-description">Personalise your classroom experience.</p>
+      </div>
+      <button class="settings-close" id="closeSettings" aria-label="Close settings">×</button>
+    </div>
+
+    <div class="setting-group">
+      <h3>Appearance</h3>
+      <p>Choose the look that feels right for you.</p>
+      <div class="theme-options" role="group" aria-label="Website theme">
+        <button class="theme-option" data-theme-choice="default" aria-pressed="true">
+          <span class="theme-preview preview-default"><i></i><i></i><i></i></span>
+          <span><strong>Default</strong><small>Original green theme</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+        <button class="theme-option" data-theme-choice="dark" aria-pressed="false">
+          <span class="theme-preview preview-dark"><i></i><i></i><i></i></span>
+          <span><strong>Dark</strong><small>Easy on the eyes</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+        <button class="theme-option" data-theme-choice="day" aria-pressed="false">
+          <span class="theme-preview preview-day"><i></i><i></i><i></i></span>
+          <span><strong>Day</strong><small>Warm, bright colours</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="setting-group account-group">
+      <h3>Account</h3>
+      <p>You are signed in to Google Classroom.</p>
+      <div class="account-card">
+        <img class="account-avatar" src="https://i.pravatar.cc/80?img=47" alt="Lena Williams">
+        <div class="account-info">
+          <strong>Lena Williams</strong>
+          <small>ID: 1094881999</small>
+          <small>CSE B · 2022 Batch</small>
+        </div>
+        <span class="account-status"><i></i>Signed in</span>
+      </div>
+      <button class="logout-btn" id="logoutBtn" type="button">Log out</button>
+    </div>
+    <p class="settings-note">Your theme preference is saved on this device.</p>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="../js/script.js"></script>
+<script>
+  // Dynamic Course Data based on ?course=... URL query parameter
+  const coursesData = {
+    ai: { title: 'Artificial Intelligence', code: 'CS401', teacher: 'Mr. Felix', badge: 'ADVANCED · TECHNICAL', cls: 'c1', tint: '#f1e8f6', accent: '#c36bd7' },
+    os: { title: 'Operating Systems', code: 'CS302', teacher: 'Ms. Nancy', badge: 'INTERMEDIATE · TECHNICAL', cls: 'c2', tint: '#fff4e9', accent: '#e66f79' },
+    web: { title: 'Web Programming', code: 'CS204', teacher: 'Ms. Williams', badge: 'BEGINNER · TECHNICAL', cls: 'c3', tint: '#fff0e9', accent: '#e8767c' },
+    cloud: { title: 'Cloud Computing', code: 'CS405', teacher: 'Mr. Alex', badge: 'INTERMEDIATE · TECHNICAL', cls: 'c4', tint: '#f1e8f6', accent: '#bb69d4' },
+    se: { title: 'Software Engineering', code: 'CS308', teacher: 'Ms. Susan', badge: 'INTERMEDIATE · MALAYALAM', cls: 'c5', tint: '#fff2e9', accent: '#e77b80' },
+    gd: { title: 'Graphic Designing', code: 'DS101', teacher: 'Ms. Betsy', badge: 'BEGINNER · CREATIVE', cls: 'c6', tint: '#fff3e8', accent: '#e9787d' }
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const key = params.get('course') || 'ai';
+  const course = coursesData[key] || coursesData.ai;
+
+  document.title = `${course.title} — Google Classroom`;
+  document.getElementById('coursePageHeading').textContent = course.title;
+  document.getElementById('courseBannerTitle').textContent = `${course.code}: ${course.title}`;
+  document.getElementById('courseInstructor').textContent = course.teacher;
+  document.getElementById('peopleInstructor').textContent = course.teacher;
+  document.getElementById('courseBadge').textContent = course.badge;
+  document.getElementById('announceAuthor1').textContent = `${course.teacher} posted a new assignment: Lab 3`;
+
+  const banner = document.getElementById('courseBanner');
+  banner.className = `course-banner ${course.cls}`;
+  banner.style.setProperty('--tint', course.tint);
+  banner.style.setProperty('--accent', course.accent);
+
+  // Course Tabs switching
+  document.querySelectorAll('.course-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.course-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+    });
+  });
+
+  // Post Announcement in Stream
+  const postInput = document.getElementById('postInput');
+  const postBtn = document.getElementById('postBtn');
+  const streamList = document.getElementById('streamList');
+
+  postBtn.addEventListener('click', () => {
+    const text = postInput.value.trim();
+    if (!text) return toast('Please write a message first.');
+    const card = document.createElement('article');
+    card.className = 'stream-card';
+    card.innerHTML = `
+      <div class="stream-meta">
+        <img src="https://i.pravatar.cc/80?img=47" alt="" style="width:34px;height:34px;border-radius:50%;object-fit:cover;">
+        <div>
+          <strong>Lena Williams</strong>
+          <small>Just now</small>
+        </div>
+      </div>
+      <p class="stream-body" style="margin:0;"></p>
+    `;
+    card.querySelector('.stream-body').textContent = text;
+    streamList.prepend(card);
+    postInput.value = '';
+    toast('Posted to class stream');
+  });
+</script>
+</body>
+</html>

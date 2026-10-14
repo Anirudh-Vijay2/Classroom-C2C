@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Google Classroom — My Courses</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="frame">
+  <div class="app">
+    <!-- Mobile Sidebar Backdrop -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img class="brand-logo" src="assets/logo.png" alt="College logo">
+        <div>Google<small>Classroom</small></div>
+        <button class="sidebar-close" id="closeSidebar" aria-label="Close navigation menu">×</button>
+      </div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html" class="active" data-nav="Dashboard">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></span>Dashboard
+        </a>
+        <a href="pages/all-courses.html" data-nav="All Courses">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/></svg></span>All Courses
+        </a>
+        <a href="pages/messages.html" data-nav="Messages">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Messages
+        </a>
+        <a href="pages/friends.html" data-nav="Friends">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Friends
+        </a>
+        <a href="pages/schedule.html" data-nav="Schedule">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Schedule
+        </a>
+        <a href="pages/todo.html" data-nav="To-do">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>To-do
+        </a>
+      </nav>
+
+      <nav class="nav settings">
+        <button type="button" data-nav="Settings">
+          <span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>Settings
+        </button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="mobile-brand">
+            <button class="menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+            <img class="brand-logo" src="assets/logo.jpg" alt="College logo">Google Classroom
+          </div>
+          <h1>My Courses</h1>
+        </div>
+        <div class="tools">
+          <div class="toolwrap">
+            <button class="iconbtn" id="searchToggle" aria-label="Search">⌕</button>
+            <div class="searchbox" id="searchBox">
+              <input id="searchInput" placeholder="Search courses..." aria-label="Search courses">
+            </div>
+          </div>
+          <button class="iconbtn" id="notify" aria-label="Notifications">♧<span class="dot"></span></button>
+        </div>
+      </header>
+
+      <section class="filters" aria-label="Course filters">
+        <span>Filter by:</span>
+        <label class="filter"><select id="timeFilter" aria-label="Time"><option value="all">Time</option><option value="recent">Recently added</option><option value="old">Oldest first</option></select></label>
+        <label class="filter"><select id="levelFilter" aria-label="Level"><option value="all">Level</option><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></label>
+        <label class="filter"><select id="languageFilter" aria-label="Language"><option value="all">Language</option><option value="English">English</option><option value="Malayalam">Malayalam</option></select></label>
+        <label class="filter"><select id="typeFilter" aria-label="Type"><option value="all">Type</option><option value="Technical">Technical</option><option value="Creative">Creative</option></select></label>
+      </section>
+
+      <section class="courses" id="courses">
+        <a href="pages/ai-course.html?course=ai" class="course c1" style="--tint:#f1e8f6;--accent:#c36bd7" data-title="Artificial Intelligence" data-level="advanced" data-language="English" data-type="Technical" data-time="1">
+          <div class="art"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+          <h2>Artificial Intelligence</h2>
+          <div class="batch">CSE B 2022 BATCH</div>
+          <div class="creator">Created by <b>Mr. Felix</b></div>
+          <span class="go" aria-hidden="true">›</span>
+        </a>
+
+        <a href="pages/ai-course.html?course=os" class="course c2" style="--tint:#fff4e9;--accent:#e66f79" data-title="Operating Systems" data-level="intermediate" data-language="English" data-type="Technical" data-time="2">
+          <div class="art"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+          <h2>Operating Systems</h2>
+          <div class="batch">CSE B 2022 BATCH</div>
+          <div class="creator">Created by <b>Ms. Nancy</b></div>
+          <span class="go" aria-hidden="true">›</span>
+        </a>
+
+        <a href="pages/ai-course.html?course=web" class="course c3" style="--tint:#fff0e9;--accent:#e8767c" data-title="Web Programming" data-level="beginner" data-language="English" data-type="Technical" data-time="3">
+          <div class="art"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+          <h2>Web Programming</h2>
+          <div class="batch">CSE B 2022 BATCH</div>
+          <div class="creator">Created by <b>Ms. Williams</b></div>
+          <span class="go" aria-hidden="true">›</span>
+        </a>
+
+        <a href="pages/ai-course.html?course=cloud" class="course c4" style="--tint:#f1e8f6;--accent:#bb69d4" data-title="Cloud Computing" data-level="intermediate" data-language="English" data-type="Technical" data-time="4">
+          <div class="art"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+          <h2>Cloud Computing</h2>
+          <div class="batch">CSE B 2022 BATCH</div>
+          <div class="creator">Created by <b>Mr. Alex</b></div>
+          <span class="go" aria-hidden="true">›</span>
+        </a>
+
+        <a href="pages/ai-course.html?course=se" class="course c5" style="--tint:#fff2e9;--accent:#e77b80" data-title="Software Engineering" data-level="intermediate" data-language="Malayalam" data-type="Technical" data-time="5">
+          <div class="art"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+          <h2>Software Engineering</h2>
+          <div class="batch">CSE B 2022 BATCH</div>
+          <div class="creator">Created by <b>Ms. Susan</b></div>
+          <span class="go" aria-hidden="true">›</span>
+        </a>
+
+        <a href="pages/ai-course.html?course=gd" class="course c6" style="--tint:#fff3e8;--accent:#e9787d" data-title="Graphic Designing" data-level="beginner" data-language="English" data-type="Creative" data-time="6">
+          <div class="art"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div>
+          <h2>Graphic Designing</h2>
+          <div class="batch">CSE B 2022 BATCH</div>
+          <div class="creator">Created by <b>Ms. Betsy</b></div>
+          <span class="go" aria-hidden="true">›</span>
+        </a>
+      </section>
+    </main>
+
+    <aside class="right">
+      <div class="profile"><div class="name">Lena Williams<span class="id">ID: 1094881999</span></div><img class="avatar" src="https://i.pravatar.cc/80?img=47" alt="Lena Williams"></div>
+      <section class="calendar">
+        <div class="calendar-head"><h3 id="monthLabel">Dec 2025</h3><div class="cal-arrows"><button id="prevMonth" aria-label="Previous month">‹</button><button id="nextMonth" aria-label="Next month">›</button></div></div>
+        <div class="weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+        <div class="days" id="days"></div>
+      </section>
+      <section class="online"><div class="online-head"><h3>Online Users</h3><button id="seeAll">See all</button></div>
+        <div id="users">
+          <div class="user"><img src="https://i.pravatar.cc/80?img=44" alt=""><div><div class="user-name">Sophia Chen</div><div class="user-id">1094882001</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=12" alt=""><div><div class="user-name">James Miller</div><div class="user-id">1094672000</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=47" alt=""><div><div class="user-name">Isabella Garcia</div><div class="user-id">1094342003</div></div><span class="status"></span></div>
+          <div class="user"><img src="https://i.pravatar.cc/80?img=13" alt=""><div><div class="user-name">William Brown</div><div class="user-id">1094662002</div></div><span class="status"></span></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<div class="settings-overlay" id="settingsOverlay" aria-hidden="true">
+  <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-heading">
+      <div>
+        <p class="settings-eyebrow">PREFERENCES</p>
+        <h2 id="settingsTitle">Settings</h2>
+        <p class="settings-description">Personalise your classroom experience.</p>
+      </div>
+      <button class="settings-close" id="closeSettings" aria-label="Close settings">×</button>
+    </div>
+
+    <div class="setting-group">
+      <h3>Appearance</h3>
+      <p>Choose the look that feels right for you.</p>
+      <div class="theme-options" role="group" aria-label="Website theme">
+        <button class="theme-option" data-theme-choice="default" aria-pressed="true">
+          <span class="theme-preview preview-default"><i></i><i></i><i></i></span>
+          <span><strong>Default</strong><small>Original green theme</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+        <button class="theme-option" data-theme-choice="dark" aria-pressed="false">
+          <span class="theme-preview preview-dark"><i></i><i></i><i></i></span>
+          <span><strong>Dark</strong><small>Easy on the eyes</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+        <button class="theme-option" data-theme-choice="day" aria-pressed="false">
+          <span class="theme-preview preview-day"><i></i><i></i><i></i></span>
+          <span><strong>Day</strong><small>Warm, bright colours</small></span>
+          <span class="theme-check">✓</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="setting-group account-group">
+      <h3>Account</h3>
+      <p>You are signed in to Google Classroom.</p>
+      <div class="account-card">
+        <img class="account-avatar" src="https://i.pravatar.cc/80?img=47" alt="Lena Williams">
+        <div class="account-info">
+          <strong>Lena Williams</strong>
+          <small>ID: 1094881999</small>
+          <small>CSE B · 2022 Batch</small>
+        </div>
+        <span class="account-status"><i></i>Signed in</span>
+      </div>
+      <button class="logout-btn" id="logoutBtn" type="button">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+        Log out
+      </button>
+    </div>
+    <p class="settings-note" id="settingsNote">Your theme preference is saved on this device.</p>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="js/script.js"></script>
+</body>
+</html>
